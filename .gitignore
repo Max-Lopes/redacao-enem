@@ -1,0 +1,33 @@
+# Ambiente virtual
+envtextos/
+venv/
+ENV/
+
+# Arquivos de ambiente e senhas
+.env
+.env.example
+secretkey.py
+Doc temporários/
+**/Doc temporários/
+
+# Credenciais Firebase
+config/firebase_credentials.json
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Arquivos temporários
+*.tmp
+*.temp
+temp/
+tmp/
+
+# VS Code (se você usa)
+.vscode/
+
+# Outros
+.DS_Store
+*.log

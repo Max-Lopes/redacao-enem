@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha - Redação ENEM 2024</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>Recuperar Senha</h1>
+                <p class="subtitle">Digite seu email para receber uma nova senha</p>
+            </div>
+
+            <form id="recuperarSenhaForm" class="auth-form">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" 
+                           placeholder="Seu email cadastrado" required
+                           class="auth-input">
+                </div>
+
+                <button type="submit" class="auth-button">Recuperar Senha</button>
+            </form>
+
+            <div class="auth-links">
+                <p>Lembrou sua senha? <a href="{{ url_for('login') }}" class="register-link">Voltar para Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="modal-title">Nova Senha Enviada!</div>
+            <div class="modal-message">Uma nova senha foi enviada para seu email.</div>
+            <div class="modal-important">IMPORTANTE:</div>
+            <div class="modal-message">Verifique também sua caixa de spam.</div>
+            <button class="modal-button" onclick="redirectToLogin()">Ir para Login</button>
+        </div>
+    </div>
+
+    <script>
+    function showModal() {
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function redirectToLogin() {
+        window.location.href = '{{ url_for("login") }}';
+    }
+
+    document.getElementById('recuperarSenhaForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch('{{ url_for("recuperar_senha") }}', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showModal();  // Apenas mostra a modal, sem alert
+            } else {
+                alert(data.error || 'Erro ao recuperar senha');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao processar solicitação');
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.result-section {
+    margin: 20px 0;
+}
+
+.text-box {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.button {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+/* Estilos para as seções de problemas e sugestões */
+.problemas, .sugestoes {
+    margin: 15px 0;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.problemas h4, .sugestoes h4 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.problemas {
+    border-left: 4px solid #dc3545;  /* Vermelho para problemas */
+}
+
+.sugestoes {
+    border-left: 4px solid #28a745;  /* Verde para sugestões */
+}
+
+/* Estilo para as listas */
+.problemas ul, .sugestoes ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+.problemas li, .sugestoes li {
+    margin: 8px 0;
+    line-height: 1.4;
+    color: #555;
+    position: relative;
+    padding-left: 20px;
+}
+
+.problemas li:before, .sugestoes li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #666;
+}
+
+/* Estilo para mensagens quando não há problemas/sugestões */
+.problemas p, .sugestoes p {
+    color: #666;
+    font-style: italic;
+    margin: 5px 0;
+    padding: 5px 0;
+}
+
+/* Melhorias no layout geral */
+.competencia {
+    margin-bottom: 30px;
+    padding: 25px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.feedback {
+    margin: 15px 0;
+    line-height: 1.6;
+    color: #333;
+}
+
+.nota-competencia {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .problemas, .sugestoes {
+        padding: 12px 15px;
+    }
+
+    .problemas h4, .sugestoes h4 {
+        font-size: 1em;
+    }
+
+    .competencia {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .problemas li, .sugestoes li {
+        padding-left: 15px;
+    }
+}
+
+/* Hover effects */
+.problemas li:hover, .sugestoes li:hover {
+    background-color: rgba(0,0,0,0.02);
+    transition: background-color 0.2s ease;
+}
+
+/* Animação suave ao carregar */
+.problemas, .sugestoes {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Atualização do loading-overlay no style.css */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-container {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    max-width: 400px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.loading-message {
+    color: #2c3e50;
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e0e0e0;  /* Cor base mais escura */
+    border-top: 4px solid #4CAF50;  /* Verde para combinar com o botão de submit */
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+    /* Adicionando uma pequena sombra para dar profundidade */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Podemos também adicionar uma transição mais suave */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    50% { border-top-color: #45a049; }  /* Tom mais escuro no meio da animação */
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para autenticação */
+.auth-box {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.auth-header .subtitle {
+    font-size: 16px;
+    color: #666;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.auth-input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+    background-color: #45a049;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.register-link {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .auth-box {
+        margin: 20px;
+        padding: 20px;
+    }
+}
+
+.header-user {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 15px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+    border-radius: 0 0 0 10px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-email {
+    color: #333;  /* Cor mais escura para melhor legibilidade */
+    font-size: 14px;
+    font-weight: 500;  /* Um pouco mais bold */
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+/* Estilo da Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-icon {
+    width: 60px;
+    height: 60px;
+    background: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.modal-icon svg {
+    width: 30px;
+    height: 30px;
+    color: white;
+}
+
+.modal-title {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.modal-message {
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.modal-important {
+    color: #666;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.modal-button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.modal-button:hover {
+    background: #45a049;
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Erro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Ops! Algo deu errado</h1>
+        <div class="error-box">
+            {{ error }}
+        </div>
+        <a href="{{ url_for('index') }}" class="button">Voltar</a>
+    </div>
+</body>
+</html>

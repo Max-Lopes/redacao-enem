@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado da Análise</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header-user">
+        <div class="user-info">
+            <span class="user-email">{{ session['user_nome'] }}</span>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Sair</a>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Resultado da Análise</h1>
+        </div>
+
+        <div class="nota-final">
+            <h2>Nota Final: {{ nota_final|int }}/1000</h2>
+        </div>
+
+        <div class="competencias">
+            <div class="competencia">
+                <h3>Competência 1 - Domínio da Língua Portuguesa</h3>
+                <div class="nota-competencia">
+                    <p>Nota: {{ notas_individuais[0]|int }}/200</p>
+                </div>
+                <div class="feedback">
+                    <p>{{ feedback[0] }}</p>
+                </div>
+                <div class="problemas">
+                    <h4>Problemas Identificados:</h4>
+                    {% if problemas[0]|length > 0 %}
+                        <ul>
+                        {% for problema in problemas[0] %}
+                            <li>{{ problema }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhum problema identificado nesta competência.</p>
+                    {% endif %}
+                </div>
+                <div class="sugestoes">
+                    <h4>Sugestões de Melhoria:</h4>
+                    {% if sugestoes[0]|length > 0 %}
+                        <ul>
+                        {% for sugestao in sugestoes[0] %}
+                            <li>{{ sugestao }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhuma sugestão de melhoria para esta competência.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="competencia">
+                <h3>Competência 2 - Compreensão da Proposta</h3>
+                <div class="nota-competencia">
+                    <p>Nota: {{ notas_individuais[1]|int }}/200</p>
+                </div>
+                <div class="feedback">
+                    <p>{{ feedback[1] }}</p>
+                </div>
+                <div class="problemas">
+                    <h4>Problemas Identificados:</h4>
+                    {% if problemas[1]|length > 0 %}
+                        <ul>
+                        {% for problema in problemas[1] %}
+                            <li>{{ problema }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhum problema identificado nesta competência.</p>
+                    {% endif %}
+                </div>
+                <div class="sugestoes">
+                    <h4>Sugestões de Melhoria:</h4>
+                    {% if sugestoes[1]|length > 0 %}
+                        <ul>
+                        {% for sugestao in sugestoes[1] %}
+                            <li>{{ sugestao }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhuma sugestão de melhoria para esta competência.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="competencia">
+                <h3>Competência 3 - Argumentação</h3>
+                <div class="nota-competencia">
+                    <p>Nota: {{ notas_individuais[2]|int }}/200</p>
+                </div>
+                <div class="feedback">
+                    <p>{{ feedback[2] }}</p>
+                </div>
+                <div class="problemas">
+                    <h4>Problemas Identificados:</h4>
+                    {% if problemas[2]|length > 0 %}
+                        <ul>
+                        {% for problema in problemas[2] %}
+                            <li>{{ problema }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhum problema identificado nesta competência.</p>
+                    {% endif %}
+                </div>
+                <div class="sugestoes">
+                    <h4>Sugestões de Melhoria:</h4>
+                    {% if sugestoes[2]|length > 0 %}
+                        <ul>
+                        {% for sugestao in sugestoes[2] %}
+                            <li>{{ sugestao }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhuma sugestão de melhoria para esta competência.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="competencia">
+                <h3>Competência 4 - Coesão Textual</h3>
+                <div class="nota-competencia">
+                    <p>Nota: {{ notas_individuais[3]|int }}/200</p>
+                </div>
+                <div class="feedback">
+                    <p>{{ feedback[3] }}</p>
+                </div>
+                <div class="problemas">
+                    <h4>Problemas Identificados:</h4>
+                    {% if problemas[3]|length > 0 %}
+                        <ul>
+                        {% for problema in problemas[3] %}
+                            <li>{{ problema }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhum problema identificado nesta competência.</p>
+                    {% endif %}
+                </div>
+                <div class="sugestoes">
+                    <h4>Sugestões de Melhoria:</h4>
+                    {% if sugestoes[3]|length > 0 %}
+                        <ul>
+                        {% for sugestao in sugestoes[3] %}
+                            <li>{{ sugestao }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhuma sugestão de melhoria para esta competência.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="competencia">
+                <h3>Competência 5 - Proposta de Intervenção</h3>
+                <div class="nota-competencia">
+                    <p>Nota: {{ notas_individuais[4]|int }}/200</p>
+                </div>
+                <div class="feedback">
+                    <p>{{ feedback[4] }}</p>
+                </div>
+                <div class="problemas">
+                    <h4>Problemas Identificados:</h4>
+                    {% if problemas[4]|length > 0 %}
+                        <ul>
+                        {% for problema in problemas[4] %}
+                            <li>{{ problema }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhum problema identificado nesta competência.</p>
+                    {% endif %}
+                </div>
+                <div class="sugestoes">
+                    <h4>Sugestões de Melhoria:</h4>
+                    {% if sugestoes[4]|length > 0 %}
+                        <ul>
+                        {% for sugestao in sugestoes[4] %}
+                            <li>{{ sugestao }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhuma sugestão de melhoria para esta competência.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="/" class="button">Avaliar Outro Texto</a>
+        </div>
+    </div>
+</body>
+</html>

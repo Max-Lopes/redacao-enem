@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Redação</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .timer-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .timer-display {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .timer-buttons button {
+            margin: 0 5px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .timer-buttons button:hover {
+            opacity: 0.9;
+        }
+        #startTimer {
+            background-color: #28a745;
+        }
+        #stopTimer {
+            background-color: #dc3545;
+        }
+        #resetTimer {
+            background-color: #007bff;
+        }
+        .word-counter {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .word-counter.invalid {
+            color: #dc3545;
+        }
+        .text-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-user">
+        <div class="user-info">
+            <span class="user-email">{{ session['user_nome'] }}</span>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Sair</a>
+    </div>
+
+    <div class="container">
+        <h1>Análise de Redação</h1>
+
+        <div class="form-group">
+            <h2>Tema da Redação do Enem</h2>
+
+            <div>
+                <input type="radio" id="randomTheme" name="themeOption" value="random" checked>
+                <label for="randomTheme">Gerar tema aleatório</label>
+
+                <input type="radio" id="customTheme" name="themeOption" value="custom">
+                <label for="customTheme">Digitar meu próprio tema</label>
+            </div>
+
+            <div id="randomTemaDisplay" class="theme-display" style="display: block; margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                <strong>Tema gerado:</strong> <span id="randomTemaText"></span>
+                <button type="button" onclick="gerarNovoTema()" id="btnGerarTema" style="margin-left: 10px; padding: 5px 10px;">Gerar Novo Tema</button>
+                <input type="hidden" id="currentRandomTema" name="currentRandomTema">
+            </div>
+
+            <div id="customTemaDiv" style="display: none; margin-top: 10px;">
+                <textarea id="customTemaInput" name="customTema" rows="2" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" 
+                    placeholder="Digite aqui seu tema personalizado"></textarea>
+            </div>
+        </div>
+
+        
+        <!-- Cronômetro -->
+        <div class="timer-container">
+            <h3>Tempo de Redação</h3>
+            <div class="timer-display" id="timer">00:00:00</div>
+            <div class="timer-buttons">
+                <button id="startTimer" onclick="startTimer()">Iniciar</button>
+                <button id="stopTimer" onclick="stopTimer()">Parar</button>
+                <button id="resetTimer" onclick="resetTimer()">Zerar</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="text-header">
+                <h2>Texto da Redação</h2>
+                <div class="word-counter" id="wordCounter">0 palavras</div>
+            </div>
+            <textarea id="texto" name="texto" rows="10" style="width: 100%;" 
+                      required oninput="updateWordCount()"></textarea>
+            <div class="word-counter" id="wordLimits">
+                Limite de palavras: 150-400
+            </div>
+        </div>
+
+        <button onclick="analisarTexto()" class="btn btn-primary">Analisar Texto</button>
+    </div>
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="loading-message">
+                Aguarde, nossa Inteligência Artificial está analisando sua redação...
+            </div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <script>
+        // Código existente do cronômetro e temas
+        let DEFAULT_THEMES = [];
+        let timerInterval;
+        let seconds = 0;
+        let isRunning = false;
+
+        // Função para contar palavras
+        function countWords(text) {
+            return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        }
+
+        // Função para atualizar contador de palavras
+        function updateWordCount() {
+            const text = document.getElementById('texto').value;
+            const wordCount = countWords(text);
+            const counterElement = document.getElementById('wordCounter');
+            const isValid = wordCount >= 150 && wordCount <= 400;
+
+            counterElement.textContent = `${wordCount} palavras`;
+            counterElement.className = `word-counter ${isValid ? '' : 'invalid'}`;
+        }
+
+        // Carregar temas do backend
+        fetch('/get-themes')
+            .then(response => response.json())
+            .then(themes => {
+                DEFAULT_THEMES = themes;
+                gerarNovoTema();
+            })
+            .catch(error => {
+                console.error('Erro ao carregar temas:', error);
+                DEFAULT_THEMES = [
+                    "Erro ao carregar temas. Por favor, recarregue a página."
+                ];
+            });
+
+        // Funções do cronômetro (mantidas como estavam)
+        function updateTimer() {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            const timeString = [hours, minutes, secs]
+                .map(v => v < 10 ? "0" + v : v)
+                .join(":");
+                
+            document.getElementById('timer').textContent = timeString;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimer();
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            updateTimer();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const randomTheme = document.getElementById('randomTheme');
+            const customTheme = document.getElementById('customTheme');
+            const randomTemaDisplay = document.getElementById('randomTemaDisplay');
+            const customTemaDiv = document.getElementById('customTemaDiv');
+
+            function toggleThemeInputs() {
+                if (randomTheme.checked) {
+                    randomTemaDisplay.style.display = 'block';
+                    customTemaDiv.style.display = 'none';
+                } else {
+                    randomTemaDisplay.style.display = 'none';
+                    customTemaDiv.style.display = 'block';
+                }
+            }
+
+            randomTheme.addEventListener('change', toggleThemeInputs);
+            customTheme.addEventListener('change', toggleThemeInputs);
+
+            toggleThemeInputs();
+        });
+
+        function gerarNovoTema() {
+            const temaGerado = DEFAULT_THEMES[Math.floor(Math.random() * DEFAULT_THEMES.length)];
+            document.getElementById('randomTemaText').textContent = temaGerado;
+            document.getElementById('currentRandomTema').value = temaGerado;
+        }
+
+        function analisarTexto() {
+            const texto = document.getElementById('texto').value;
+            const wordCount = countWords(texto);
+            
+            if (!texto.trim()) {
+                alert('Por favor, insira o texto da redação.');
+                return;
+            }
+
+            if (wordCount < 150) {
+                alert('O texto deve ter no mínimo 150 palavras.');
+                return;
+            }
+
+            if (wordCount > 400) {
+                alert('O texto deve ter no máximo 400 palavras.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('texto', texto);
+
+            if (document.getElementById('randomTheme').checked) {
+                formData.append('themeOption', 'random');
+                const temaAtual = document.getElementById('currentRandomTema').value;
+                formData.append('customTema', temaAtual);
+            } else {
+                const customTema = document.getElementById('customTemaInput').value;
+                if (!customTema.trim()) {
+                    alert('Por favor, insira um tema personalizado.');
+                    return;
+                }
+                formData.append('themeOption', 'custom');
+                formData.append('customTema', customTema);
+            }
+            // Mostra o loading antes do fetch
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.documentElement.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao analisar o texto.');
+                // Esconde o loading em caso de erro
+                document.getElementById('loading-overlay').style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>

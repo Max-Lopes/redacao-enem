@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Redação ENEM 2024</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>Cadastro</h1>
+                <p class="subtitle">Crie sua conta para acessar o sistema</p>
+            </div>
+
+            <form id="cadastroForm" class="auth-form">
+                <div class="form-group">
+                    <input type="text" id="nome" name="nome" 
+                           placeholder="Nome completo" required
+                           class="auth-input" minlength="3" pattern="[A-Za-zÀ-ÿ\s]+"
+                           title="Por favor, insira apenas letras">
+                </div>
+
+                <div class="form-group">
+                    <input type="email" id="email" name="email" 
+                           placeholder="Email" required
+                           class="auth-input">
+                </div>
+
+                <div class="form-group">
+                    <input type="tel" id="telefone" name="telefone" 
+                           placeholder="Telefone" required
+                           class="auth-input" pattern="\(\d{2}\)\s\d{5}-\d{4}"
+                           title="Formato: (99) 99999-9999">
+                </div>
+
+                <div class="form-group">
+                    <input type="number" id="idade" name="idade" 
+                           placeholder="Idade" required
+                           class="auth-input" min="13" max="100">
+                </div>
+
+                <div class="form-group">
+                    <select id="estado" name="estado" class="auth-input" required>
+                        <option value="">Selecione seu estado</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="auth-button">CADASTRAR</button>
+            </form>
+
+            <div class="auth-links">
+                <p>Já tem uma conta? <a href="{{ url_for('login') }}" class="register-link">Fazer login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="modal-title">Cadastro Realizado!</div>
+            <div class="modal-message">Uma senha foi enviada para seu email.</div>
+            <div class="modal-important">IMPORTANTE:</div>
+            <div class="modal-message">Verifique também sua caixa de spam.</div>
+            <button class="modal-button" onclick="redirectToLogin()">OK, Entendi</button>
+        </div>
+    </div>
+
+    <script>
+    function showModal() {
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function redirectToLogin() {
+        window.location.href = '{{ url_for("login") }}';
+    }
+
+    document.getElementById('cadastroForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch('{{ url_for("cadastro") }}', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showModal();  // Apenas mostra a modal, sem alert
+            } else {
+                alert(data.error || 'Erro ao realizar cadastro');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao realizar cadastro');
+        }
+    });
+
+    // Máscara para telefone
+    document.getElementById('telefone').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            e.target.value = value;
+        }
+    });
+    </script>
+</body>
+</html>

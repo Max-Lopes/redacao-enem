@@ -1,0 +1,4 @@
+text_reviewer:
+  role: "Revisor de Texto"
+  temperature: 0.7
+  verbose: true
