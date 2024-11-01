@@ -1,3 +1,4 @@
+# config/firebase_config.py
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import os
@@ -6,20 +7,24 @@ import json
 class FirebaseConfig:
     def __init__(self):
         try:
-            # Obtém o caminho absoluto para o arquivo de credenciais
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            cred_path = os.path.join(current_dir, 'firebase_credentials.json')
+            # Tenta pegar as credenciais da variável de ambiente
+            google_creds = os.getenv('GOOGLE_CREDENTIALS')
             
-            # Verifica se o arquivo existe
-            if not os.path.exists(cred_path):
-                raise FileNotFoundError(f"Arquivo de credenciais não encontrado em: {cred_path}")
-            
-            # Tenta ler o arquivo para verificar se é um JSON válido
-            with open(cred_path, 'r') as file:
-                json.load(file)
-            
+            if google_creds:
+                # Converte a string JSON em dicionário
+                creds_dict = json.loads(google_creds)
+                cred = credentials.Certificate(creds_dict)
+            else:
+                # Fallback para arquivo local durante desenvolvimento
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                cred_path = os.path.join(current_dir, 'firebase_credentials.json')
+                
+                if not os.path.exists(cred_path):
+                    raise FileNotFoundError(f"Credenciais do Firebase não encontradas")
+                
+                cred = credentials.Certificate(cred_path)
+
             # Inicializa o Firebase Admin SDK
-            cred = credentials.Certificate(cred_path)
             if not firebase_admin._apps:
                 firebase_admin.initialize_app(cred)
             
@@ -27,14 +32,8 @@ class FirebaseConfig:
             self.db = firestore.client()
             self.auth = auth
             
-        except FileNotFoundError as e:
-            print(f"Erro: {e}")
-            raise
-        except json.JSONDecodeError as e:
-            print(f"Erro ao decodificar JSON: {e}")
-            raise
         except Exception as e:
-            print(f"Erro ao inicializar Firebase: {e}")
+            print(f"Erro ao inicializar Firebase: {str(e)}")
             raise
 
     def get_db(self):
